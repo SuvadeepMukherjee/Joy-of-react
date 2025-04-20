@@ -36,6 +36,8 @@ Index.html
 
 #### Q2:Below we are writing the code to show "Hello World" on the browser 
 
+Index.js
+
 ```js
 // 1. Import dependencies
 import React from 'react';
@@ -54,6 +56,8 @@ const root = createRoot(container);
 root.render(element);
 ```
 
+Index.html
+
 ```html
 <html>
 <body>
@@ -63,6 +67,8 @@ root.render(element);
 </body>
 </html>
 ```
+
+
 
 Why there are seperate 2 packages ? 
 
@@ -78,11 +84,13 @@ This is because React itself is “platform agnostic”. We have the core `react
 
 Every platform has its own “primitives”, the set of built-in elements we use  to create our UI. On the web, the primitives are HTML elements like `<div>` and `<p>` and `<button>`. By contrast, React Native doesn't have divs, it has `Text` and `View` and `Pressable`. And things get even more wild with react-three-fiber, where the  primitives are things like lights, geometries, materials, and cameras.
 
-All of these platforms will use the same core React framework, which comes from the `react` package. But when it comes to actually turning all of the business  logic into a user interface, we need the correct bindings for our  platform.
+All of these platforms will use the same core React framework, which comes from the `react` package. *But when it comes to actually turning all of the business  logic into a user interface, we need the correct bindings for our  platform*.
 
 #### Q3:What is the difference between DOM and HTML ? 
 
 **Answer**:
+
+The DOM is the living , breathing structure that makes up a live website /web-application .When we visit a website the *browser turns the static HTML into the DOM*
 
 To use an analogy: HTML is the blueprint for a specific car, and the DOM is the car itself, zipping around the city.
 
@@ -112,7 +120,7 @@ const element = React.createElement(
 );
 ```
 
-#### Q6:What does the following code return ? 
+#### Q6:What will be logged to the console  ? 
 
 ```js
 const element = React.createElement(
@@ -120,9 +128,12 @@ const element = React.createElement(
   { id: 'hello' },
   'Hello World!'
 );
+console.log(element);
 ```
 
-This function returns a “React element”. React elements are plain old JavaScript objects. If we inspect it with `console.log(element)`, we'll see something like this:
+**Answer**:
+
+This function returns a “React element”. React elements are plain old JavaScript objects
 
 ```js
 {
@@ -137,6 +148,10 @@ This function returns a “React element”. React elements are plain old JavaSc
   _store: { validated: false }
 }
 ```
+
+Tiny Keyed React pieces include children , owners and secrets 
+
+The final 2 properties _owner and _store are meant to be used internally by react and can be safely ignored by us 
 
 #### Q7:The following code paints to the DOM "Hello World"
 
