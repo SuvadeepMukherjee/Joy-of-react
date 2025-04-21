@@ -165,3 +165,114 @@ Note that our original code *didn't* include that import statement. It was inclu
 `_jsx` is a fancy optimized version of `React.createElement`. It includes some shortcuts when we use certain React features like Fragments or Portals. Otherwise, it does the exact same thing as `React.createElement`: it creates a React element.
 
 And so, these days, we *don't* have to import React. The JSX compiler will solve this problem for us.
+
+#### Q6: js inside JSX 
+
+Fill in the blanks 
+
+In JSX, the content we put between open/close tags is treated as a __________. If we try and reference a variable, it'll ____________________
+
+We can create *expression slots* with curly brackets (__).   Anything _________
+
+Because JSX turns into `React.createElement()` function calls, we'll get a JavaScript syntax error if we try and place a ___________
+
+**Answer**:
+
+In JSX, the content we put between open/close tags is treated as a static string. If we try and reference a variable, it'll print the variable name itself, rather than the value it references.
+
+We can create *expression slots* with curly brackets (`{}`). Anything placed in-between curly brackets will be treated as pure JavaScript, instead of a string.
+
+There aren't a lot of rules when it comes to JSX. The compilation process doesn't check if it's even valid! It's the messenger; it forwards the content along to the pure JS output.
+
+Because JSX turns into `React.createElement()` function calls, we'll get a JavaScript syntax error if we try and place a statement in that slot. It has to be an *expression*.
+
+```js
+import React from 'react';
+import { createRoot } from 'react-dom/client';
+
+const shoppingList = ['apple', 'banana', 'carrot'];
+
+// This code...
+const element = (
+
+  <div>
+    Items left to purchase: {shoppingList.length}
+  </div>
+
+);
+
+// ...is equivalent to this code:
+const compiledElement = React.createElement(
+  'div',
+  {},
+  'Items left to purchase: ',
+  shoppingList.length
+);
+
+const container = document.querySelector('#root');
+const root = createRoot(container);
+root.render(element);
+```
+
+#### Q7:How to add comments within jsx ? 
+
+**Answer**:
+
+To add a comment in JSX, we use an expression slot:
+
+```jsx
+const element = (
+  <div>
+    {/* Some comment! */}
+  </div>
+);
+```
+
+We specifically need to use the multi-line comment syntax (`/* */`) instead of the single-line syntax (`//`). This is because the single-line syntax comments *everything* out, including the closing `}` for the expression slot!
+
+![comments-jsx](../assets/comments-jsx.png)
+
+#### Q8:How can we add dynamic attribute values in jsx ? 
+
+**Answer**:
+
+```js
+const uniqueId = 'content-wrapper';
+
+const element = (
+  <main id={uniqueId}>
+    Hello World
+  </main>
+);
+```
+
+The squiggly brackets (`{}`) allow us to create an *expression slot*. This time, we're creating a slot for the value of the `id` attribute.
+
+#### Q9:What is the distinction between *compile-time* (the code processing that happens before the code runs in the browser) and *run-time* (the code execution that happens in the browser).
+
+**Answer**:
+
+```js
+const userEmail = 'sumeet@thegreat.com';
+
+const element = (
+  <main id={userEmail.replace('@', '-')}>
+    Hello World
+  </main>
+);
+
+// Will get compiled as:
+const compiledElement = React.createElement(
+  'main',
+  {
+    id: userEmail.replace('@', '-'),
+  },
+  'Hello World'
+);
+```
+
+**Note that when we compile the code, it doesn't actually get \*evaluated\*.** We've written some logic which will turn that `userEmail` string into `"sumeet-thegreat.com"`, replacing the `@` character with a `-`, but that only happens when we *run* the code.
+
+When JSX gets compiled to JS, we copy over everything between the `{` and `}`. We don't call any functions or run any of the logic. That happens later, when the processed JavaScript runs in the browser.
+
+This is the distinction between *compile-time* (the code processing that happens before the code runs in the browser) and *run-time* (the code execution that happens in the browser).
