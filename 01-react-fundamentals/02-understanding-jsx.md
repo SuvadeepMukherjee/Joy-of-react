@@ -276,3 +276,203 @@ const compiledElement = React.createElement(
 When JSX gets compiled to JS, we copy over everything between the `{` and `}`. We don't call any functions or run any of the logic. That happens later, when the processed JavaScript runs in the browser.
 
 This is the distinction between *compile-time* (the code processing that happens before the code runs in the browser) and *run-time* (the code execution that happens in the browser).
+
+
+
+#### Q10:"At run-time, React will automatically convert types as needed when supplying attributes in expression slots."
+
+Is the above statement true ? 
+
+**Answer**:
+
+At run-time, React will automatically convert types as needed when supplying attributes in expression slots.
+
+For example, these two elements are identical:
+
+```jsx
+// This works:
+<input required="true" />
+
+
+// And so does this!
+<input required={true} />
+```
+
+In the first example, we're setting the `required` attribute equal to the string `"true"`. In the second example, it's equal to the *boolean* attribute `true`. In HTML, values must be strings, and so the boolean `true` is converted to the string `"true"`.
+
+Similarly, we can pass either numbers or strings for numeric attributes:
+
+```jsx
+// ✅ Valid
+<input type="range" min="1" max="20" />
+// ✅ Valid
+<input type="range" min={1} max={20} />
+```
+
+#### Q11:In HTML, it's possible to set attributes to `true` by specifying only the key, like this:
+
+```html
+<input required>
+```
+
+Then why is this  not recommend ?
+
+```jsx
+<input required />
+<input required={true} />
+```
+
+ **Solution**:
+
+In HTML, it's possible to set attributes to `true` by specifying only the key, like this:
+
+```html
+<input required>
+```
+
+This same pattern has been implemented in JSX; these two elements are equivalent:
+
+```jsx
+<input required />
+<input required={true} />
+```
+
+Honestly, though, **it not recommend doing this.** its recommended to spell it out, and write `required={true}`
+
+To understand why, I think it's worth considering what it means in JavaScript when we supply only the key, and not the value.
+
+For example:
+
+```js
+const name = 'Spot';
+const dog = { name };
+
+
+console.log(dog);
+→ { name: 'Spot' }
+```
+
+When it comes to JavaScript objects, `{ name }` is equivalent to `{ name: name }`, and not `{ name: true }`.
+
+JSX is a bit of a hybrid between HTML and JS, and so it can be ambiguous  for new developers. If you're looking at JSX through an HTML lens, you'd expect the value to be `true`, but if you look at it through a JavaScript lens, you'd expect the value to be equal to the key.
+
+In fact, there was even some talk about deprecating the “attribute-only”  syntax in JSX, to remove this ambiguity. In the end, the team decided to keep it for now, but it wouldn't be a surprise  if this was removed in the future.
+
+And so, to keep things as simple and future-proof as possible, we choose to write the full thing out, `required={true}`.
+
+#### Q12:Differences between HTML and JSX 
+
+**Answer**:
+
+1. **Reserved Keywords** : Because JSX gets transformed into JS, we can't use any reserved words of JS in our JSX
+
+- `for` is changed to `htmlFor`
+- `class` is changed to `className`
+
+```html
+const element = (
+  <div>
+    <label for="name">
+      Name:
+    </label>
+    <input
+      id="name"
+      class="fun-input"
+    />
+  </div>
+);
+```
+
+​	To make the above conversion in JSX we do the following : 
+
+```jsx
+const element = (
+  <div>
+    <label htmlFor="name">
+      Name:
+    </label>
+    <input
+      id="name"
+      className="fun-input"
+    />
+  </div>
+);
+```
+
+Note => To be a bit more specific: `for` and `class` work fine when we use them on *native* HTML elements, but we run into problems if we try and use them on custom components.
+
+2. We absolutely need to close every tag we open in JSX
+
+The following is perfectly valid in HTML 
+
+```html
+<div>
+  <p>This paragraph is opened… but never closed.
+  <p>We're omitting the closing tags!
+</div>
+```
+
+ Equivalent in JSX : 
+
+```jsx
+const element = (
+  <div>
+    <p>These paragraphs are valid.</p>
+    <p>They include the closing tags.</p>
+  </div>
+);
+```
+
+3. HTML elements like `img` which doesnt have self closing tags must be closed in JSX 
+
+Perfectly valid in HTML 
+
+```html
+<img
+  alt="A friendly kitten"
+  src="/images/kitten.jpg"
+>
+```
+
+Equivalent in JSX : 
+
+```jsx
+const element = (
+  <img
+    alt="A friendly kitten"
+    src="/images/kitten.jpg"
+  />
+);
+```
+
+4. HTML can be written in uppercase whereas JSX must be written in small case 
+
+Perfectly valid in HTML 
+
+```html
+<MAIN>
+  <HEADER>
+    <H1>Hello World!</H1>
+  </HEADER>
+  <P>
+    This HTML is so loud!
+  </P>
+</MAIN>
+```
+
+Equivalent in JSX 
+
+```jsx
+const element = (
+  <main>
+    <header>
+      <h1>Hello World!</h1>
+    </header>
+    <p>
+      This HTML is so loud!
+    </p>
+  </main>
+);
+```
+
+Reason : JSX compiler uses the tag's case to tell whether it's a "primitive" (part of the DOM) or a custom component.
