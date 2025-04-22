@@ -1,4 +1,4 @@
-# 🚀 Joy of React – My Learning Journey
+# 🚀 Joy of React – My Learning Journey 
 
 Welcome to my personal learning journal as I deep-dive into **The Joy of React** course by Josh W. Comeau.  
 My goal is to **master React** from the ground up, sharpen my frontend skills, and work toward becoming a **cracked engineer** at the top of my game.  
@@ -36,7 +36,11 @@ This course covers:
 - ✅ Build and deploy real-world projects
 - ✅ Prepare for technical interviews & frontend roles
 - ✅ Reach FAANG-level React expertise
+- 
 
 ---
 
 ## 📁 Structure
+
+
+

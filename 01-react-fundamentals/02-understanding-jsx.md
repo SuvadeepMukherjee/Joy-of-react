@@ -476,3 +476,119 @@ const element = (
 ```
 
 Reason : JSX compiler uses the tag's case to tell whether it's a "primitive" (part of the DOM) or a custom component.
+
+5. Attributes must be camelCase in JSX 
+
+Valid HTML 
+
+```html
+<video
+  src="/videos/cat-skateboarding.mp4"
+  autoplay="true"
+>
+```
+
+In JSX, we need to capitalize the “p” in “autoplay”, since “auto” and “play” are distinct words:
+
+```jsx
+const element = (
+  <video
+    src="/videos/cat-skateboarding.mp4"
+    autoPlay={true}
+    //  ^ Capital “P”
+  />
+);
+```
+
+We've also switched to use an expression slot, `{true}`, instead of keeping it as a string. This is slightly more idiomatic in React, although both options will work
+
+Other properties that need to be "camelCased" include:
+
+`onclick` → `onClick`
+
+`tabindex` → `tabIndex`
+
+`stroke-dasharray` → `strokeDasharray` (this one is specific for SVGs)
+
+Note : **Data and ARIA attributes keep their dashes  **
+
+There are two exceptions to the "camelCasing" of attributes: data attributes and ARIA attributes.
+
+For example, this is valid JSX:
+
+```jsx
+const element = (
+  <button
+    data-test-id="close-dialog-button"
+    aria-label="Close dialog"
+  >
+    <img alt="" src="/icons/x.svg" />
+  </button>
+);
+```
+
+Data attributes aren't used *that* often in React, but they can  be helpful for labelling elements for automated testing. ARIA attributes are used by assistive technologies like screen readers to improve the  accessibility of our applications.
+
+6. CSS differences 
+
+In HTML, the `style` attribute allows us to apply some styles inline, to a specified element:
+
+```html
+<h1 style="font-size: 2rem;">
+  Hello World!
+</h1>
+```
+
+In JSX, `style` instead takes an object:
+
+```jsx
+const element = (
+  <h1 style={{ fontSize: '2rem' }}>
+    Hello World!
+  </h1>
+);
+```
+
+Note :  for `style`, we want to pass an object containing the CSS properties we want to set, and their values thats why we need to pass an object 
+
+All CSS properties are written in “camelCase”. Every dash is replaced by capitalizing the subsequent word:
+
+background-position` becomes `backgroundPosition
+
+`border-bottom-color` becomes `borderBottomColor`
+
+For vendor prefixes like `-webkit-font-smoothing`, we capitalize the first letter as well: `**W**ebkitFontSmoothing`.
+
+Also, React will automatically apply the `px` suffix for certain CSS properties. For example:
+
+```jsx
+<div
+  style={{
+    width: 200, // Equivalent to `width: 200px`
+    paddingTop: 8, // Equivalent to `padding-top: 8px`
+  }}
+>
+```
+
+Watch out for properties that take a unitless value by default, like `flex` or `lineHeight`.
+
+For example, this code will produce lines that are *twenty times taller* than default, not lines that are 20px tall:
+
+```jsx
+<p
+  style={{
+    lineHeight: 20, // Equivalent to `line-height: 20`
+  }}
+>
+```
+
+While it's a common convention in React to use unitless values where possible, you can absolutely use full units if you prefer!
+
+```jsx
+<p
+  style={{
+    width: '200px',
+    paddingTop: '8px',
+  }}
+>
+```
